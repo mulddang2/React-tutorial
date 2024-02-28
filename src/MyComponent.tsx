@@ -1,64 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 function MyComponent() {
-  const [cars, setCars] = useState([]);
-  const [carYear, setCarYear] = useState(new Date().getFullYear());
-  const [carMake, setCarMake] = useState('');
-  const [carModel, setCarModel] = useState('');
+  const [count, setCount] = useState(0);
+  const [color, setColor] = useState('green');
 
-  function handleAddCar() {
-    const newCar = { year: carYear, make: carMake, model: carModel };
 
-    setCars((c) => [...c, newCar]);
-    // 추가한 후, 현재 년도로 재설정
-    setCarYear(new Date().getFullYear());
-    // 추가한 후, 빈문자로 초기화
-    setCarMake('');
-    setCarModel('');
+/** NOTE: useEffect 의 이점
+ * 1. 해당 코드가 정확히 언제 실행되는지 알 수 있다. (마운트 시에 실행하는지, 모든 렌더링 중에 실행되는 것인지)
+ * 2. 특정 상황에서만 일부 코드를 수행할 수 있는 옵션이 있다.
+ * 
+ */
+
+
+  useEffect(() => {
+    // count가 변경될 때마다(count를 더하든, 빼든) 문서 제목이 변경됨
+    document.title = `Count: ${count} ${color}`;
+
+    // DOM에서 이 컴포넌트 제거할 때, 반환할 수 있다. 정리하는 것
+    return () => {
+
+    }
+  }, [count, color]);
+
+  function addCount() {
+    setCount((c) => c + 1);
   }
 
-  function handleRemoveCar(index) {
-    setCars(c => c.filter((_, i) => i !== index));
+  function subtractCount() {
+    setCount((c) => c - 1);
   }
 
-  function handleYearChange(event) {
-    setCarYear(event.target.value);
-  }
-  function handleMakeChange(event) {
-    setCarMake(event.target.value);
-  }
-  function handleModelChange(event) {
-    setCarModel(event.target.value);
+  function changeColor() {
+    setColor((c) => (c === 'green' ? 'red' : 'green'));
   }
 
   return (
-    <div>
-      <h2>List of Car Object</h2>
-      <ul>
-        {cars.map((car, index) => (
-          <li key={index} onClick={() => handleRemoveCar(index)}>
-            {car.year} {car.make} {car.model}
-          </li>
-        ))}
-      </ul>
-      <input type='number' value={carYear} onChange={handleYearChange} />
+    <>
+      <p style={{ color: color }}>Count: {count}</p>
+      <button onClick={addCount}>Add</button>
+      <button onClick={subtractCount}>Subtract</button>
       <br />
-      <input
-        type='text'
-        value={carMake}
-        onChange={handleMakeChange}
-        placeholder='Enter car make'
-      />
-      <br />
-      <input
-        type='text'
-        value={carModel}
-        onChange={handleModelChange}
-        placeholder='Enter car model'
-      />
-      <br />
-      <button onClick={handleAddCar}>Add Car</button>
-    </div>
+      <button onClick={changeColor}>Change Color</button>
+    </>
   );
 }
 export default MyComponent;
