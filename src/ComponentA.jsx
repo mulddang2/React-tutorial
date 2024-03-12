@@ -13,7 +13,7 @@ import ComponentB from './ComponentB';
 
 export const UserContext = createContext();
 function ComponentA() {
-  const [user, setUser] = useState('Suzy');
+  const [user] = useState('Suzy');
 
   return (
     <div className='box'>
